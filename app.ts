@@ -28,6 +28,9 @@ app.use(cors({origin: "http://localhost:5173"}))
 app.use('/api/users', userRoutes);
 app.use('/api/houses', houseRoutes)
 app.use('/api/collegiates', collegiateRoutes)
+app.all('/api/ping', (req, res) => {
+    res.status(200).json({"message": "pong"})
+})
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGODB_URI ?? "mongodb://localhost:27017", {}).then(() => {
