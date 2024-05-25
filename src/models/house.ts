@@ -6,14 +6,14 @@ import {LocationSchema} from "./location";
 export interface IHouse extends Document {
   _id: ObjectId;
   location: Location;
-  owner: IUser;
+  owner: IUser['_id'];  // Reference to User model
   name: string;
   photos: string[];
 }
 
 const HouseSchema = new Schema({
   location: { type: LocationSchema, required: true },
-  owner: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+  owner: { type: Schema.Types.ObjectId, ref: 'User', required: true },  // Reference to User model
   name: { type: String, required: true },
   photos: { type: [String], required: true }
 });

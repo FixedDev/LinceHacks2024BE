@@ -1,7 +1,12 @@
 import { Router } from 'express';
 import { House, IHouse } from '../models/house';
+import { loadUser, authorize, AuthenticatedRequest } from '../middleware/auth';
+import { UserRole } from '../models/user';
 
 const router = Router();
+
+// Middleware para cargar el usuario en la solicitud
+router.use(loadUser);
 
 // Get all houses
 router.get('/', async (req, res) => {
@@ -9,7 +14,7 @@ router.get('/', async (req, res) => {
         const houses = await House.find().populate('owner');
         res.json(houses);
     } catch (error) {
-        res.status(500).json({ error: error});
+        res.status(500).json({ error: error });
     }
 });
 
@@ -26,10 +31,13 @@ router.get('/:id', async (req, res) => {
     }
 });
 
-// Create a new house
-router.post('/', async (req, res) => {
+// Create a new house (only for landlords)
+router.post('/', authorize([UserRole.LANDLORD]), async (req: AuthenticatedRequest, res) => {
     try {
-        const newHouse: IHouse = new House(req.body);
+        const newHouse: IHouse = new House({
+            ...req.body,
+            owner: req.user!._id
+        });
         await newHouse.save();
         res.status(201).json(newHouse);
     } catch (error) {
@@ -37,8 +45,8 @@ router.post('/', async (req, res) => {
     }
 });
 
-// Update a house by ID
-router.put('/:id', async (req, res) => {
+// Update a house by ID (only for landlords)
+router.put('/:id', authorize([UserRole.LANDLORD]), async (req, res) => {
     try {
         const updatedHouse = await House.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
         if (!updatedHouse) {
@@ -50,8 +58,8 @@ router.put('/:id', async (req, res) => {
     }
 });
 
-// Delete a house by ID
-router.delete('/:id', async (req, res) => {
+// Delete a house by ID (only for landlords)
+router.delete('/:id', authorize([UserRole.LANDLORD]), async (req, res) => {
     try {
         const deletedHouse = await House.findByIdAndDelete(req.params.id);
         if (!deletedHouse) {
