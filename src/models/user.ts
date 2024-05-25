@@ -27,7 +27,10 @@ export interface IBaseUser extends Document {
 const BaseUserSchema = new Schema<IBaseUser>({
     _id: String,
     fullName: String,
-    email: String,
+    email: {
+        type: String,
+        unique: true,
+    },
     whatsapp: String,
     role: {
         type: String,

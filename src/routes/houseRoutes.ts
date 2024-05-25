@@ -18,6 +18,18 @@ router.get('/', async (req, res) => {
     }
 });
 
+router.get('/by-owner/', async (req, res) => {
+    try {
+        const house = await House.find({owner: req.header("userId")});
+        if (!house) {
+            return res.status(404).json({ message: 'House not found' });
+        }
+        res.json(house);
+    } catch (error) {
+        res.status(500).json({ error: error });
+    }
+});
+
 // Get a single house by ID
 router.get('/:id', async (req, res) => {
     try {
