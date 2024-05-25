@@ -1,47 +1,76 @@
-import {Schema, model, Document} from 'mongoose';
-import {ICollegiate} from './collegiate';
+import { Schema, model, Document } from 'mongoose';
 
+// Enumeración para el campo 'role'
 export enum UserRole {
-    LANDLORD = 'landlord',
-    STUDENT = 'student'
+    LANDLORD = 'arrendador',
+    STUDENT = 'estudiante',
 }
 
 export enum Gender {
-    MALE = 'male',
-    FEMALE = 'female',
-    OTHER = 'other'
+    MALE = 'masculino',
+    FEMALE = 'femenino',
+    OTHER = 'otro'
 }
-
-export interface IUser extends Document {
+// Interfaz base para los atributos comunes
+export interface IBaseUser extends Document {
     _id: string;
     fullName: string;
     email: string;
     whatsapp: string;
     role: UserRole;
-    collegiate: ICollegiate['_id'];  // Reference to Collegiate model
     gender: Gender;
     bornDate: string;
-    studentId: string; // base64
-    residenceId: string; // base64
-    familyName: string;
-    familyNumber: string;
     hasCompleteProfile: boolean;
 }
 
-const UserSchema = new Schema({
-    _id: {type: String, required: true},
-    fullName: {type: String, required: true},
-    email: {type: String, required: true, unique: true},
-    whatsapp: {type: String, required: true},
-    role: {type: String, enum: Object.values(UserRole), required: true},
-    collegiate: {type: Schema.Types.ObjectId, ref: 'Collegiate', required: true},  // Reference to Collegiate model
-    gender: {type: String, enum: Object.values(Gender), required: true},
-    bornDate: {type: String, required: true},
-    studentId: {type: String, required: true},  // base64
-    residenceId: {type: String, required: true},  // base64
-    familyName: {type: String, required: true},
-    familyNumber: {type: String, required: true},
-    hasCompleteProfile: {type: Boolean, required: true}
-});
+// Esquema base
+const BaseUserSchema = new Schema<IBaseUser>({
+    _id: String,
+    fullName: String,
+    email: String,
+    whatsapp: String,
+    role: {
+        type: String,
+        enum: [UserRole.LANDLORD, UserRole.STUDENT],
+    },
+    gender: String,
+    bornDate: String,
+    hasCompleteProfile: Boolean,
+}, { discriminatorKey: 'role' });
 
-export const User = model<IUser>('User', UserSchema);
+// Esquema para arrendador
+interface ILandlord extends IBaseUser {
+    // Agregar atributos específicos para arrendador si es necesario
+}
+
+const LandlordSchema = new Schema<ILandlord>({
+    // Atributos específicos para arrendador
+}, { discriminatorKey: 'role' });
+
+// Esquema para estudiante
+export interface IStudent extends IBaseUser {
+    studentId: string;
+    residenceId: string;
+    familyName: string;
+    familyNumber: string;
+    collegiate: string;  // Reference to Collegiate model
+}
+
+const StudentSchema = new Schema<IStudent>({
+    studentId: String,
+    residenceId: String,
+    familyName: String,
+    familyNumber: String,
+    collegiate: String,  // Reference to Collegiate model
+}, { discriminatorKey: 'role' });
+
+// Modelo base
+const BaseUser = model<IBaseUser>('BaseUser', BaseUserSchema);
+
+// Modelo para arrendador
+const Landlord = BaseUser.discriminator<ILandlord>('arrendador', LandlordSchema);
+
+// Modelo para estudiante
+const Student = BaseUser.discriminator<IStudent>('estudiante', StudentSchema);
+
+export { BaseUser, Landlord, Student };

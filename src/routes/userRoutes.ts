@@ -1,12 +1,12 @@
 import {Router} from 'express';
-import {User, IUser} from '../models/user';
+import {BaseUser, IBaseUser} from '../models/user';
 
 const router = Router();
 
 // Get all users
 router.get('/', async (req, res) => {
     try {
-        const users = await User.find().populate('collegiate');
+        const users = await BaseUser.find().populate('collegiate');
         res.json(users);
     } catch (error) {
         res.status(500).json({error: error});
@@ -16,7 +16,7 @@ router.get('/', async (req, res) => {
 // Get a single user by ID
 router.get('/:id', async (req, res) => {
     try {
-        const user = await User.findById(req.params.id).populate('collegiate');
+        const user = await BaseUser.findById(req.params.id).populate('collegiate');
         if (!user) {
             return res.status(404).json({message: 'User not found'});
         }
@@ -29,7 +29,7 @@ router.get('/:id', async (req, res) => {
 // Create a new user
 router.post('/', async (req, res) => {
     try {
-        const newUser: IUser = new User(req.body);
+        const newUser: IBaseUser = new BaseUser(req.body);
         await newUser.save();
         res.status(201).json(newUser);
     } catch (error) {
@@ -40,7 +40,7 @@ router.post('/', async (req, res) => {
 // Update a user by ID
 router.put('/:id', async (req, res) => {
     try {
-        const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, {new: true, runValidators: true}).populate('collegiate');
+        const updatedUser = await BaseUser.findByIdAndUpdate(req.params.id, req.body, {new: true, runValidators: true}).populate('collegiate');
         if (!updatedUser) {
             return res.status(404).json({message: 'User not found'});
         }
@@ -53,7 +53,7 @@ router.put('/:id', async (req, res) => {
 // Delete a user by ID
 router.delete('/:id', async (req, res) => {
     try {
-        const deletedUser = await User.findByIdAndDelete(req.params.id).populate('collegiate');
+        const deletedUser = await BaseUser.findByIdAndDelete(req.params.id).populate('collegiate');
         if (!deletedUser) {
             return res.status(404).json({message: 'User not found'});
         }

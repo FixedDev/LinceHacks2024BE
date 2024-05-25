@@ -2,10 +2,10 @@ import * as dotenv from "dotenv";
 
 dotenv.config({path: __dirname + '/.env', debug: true});
 
-import http from "http";
 import path from "path";
 import cookieParser from "cookie-parser";
 import logger from "morgan";
+import cors from "cors";
 
 import express from 'express';
 import mongoose from 'mongoose';
@@ -22,6 +22,7 @@ app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(cors({origin: "http://localhost:5173/"}))
 
 // Routes
 app.use('/api/users', userRoutes);
