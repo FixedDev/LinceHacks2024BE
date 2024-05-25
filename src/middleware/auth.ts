@@ -7,7 +7,6 @@ export interface AuthenticatedRequest extends Request {
 
 export const loadUser = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
     const userId = req.header('userId'); // Se supone que el ID del usuario se pasa en el encabezado para este ejemplo
-    console.log(userId);
 
     if (!userId) {
         return res.status(400).json({message: 'userId header is required'});
@@ -15,7 +14,6 @@ export const loadUser = async (req: AuthenticatedRequest, res: Response, next: N
 
     try {
         const user = await BaseUser.findById(userId);
-        console.log(user);
         if (!user) {
             return res.status(404).json({message: 'User provided on header was not found'});
         }

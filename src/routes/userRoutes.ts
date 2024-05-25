@@ -31,7 +31,6 @@ router.get('/:id', async (req, res) => {
 router.get('/by-email/:email', async (req, res) => {
     try {
         const user = await BaseUser.find({"email": req.params.email}).populate('collegiate');
-        console.log(user);
 
         if (!user) {
             return res.status(404).json({message: 'User not found'});
