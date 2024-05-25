@@ -1,7 +1,6 @@
 import { Router } from 'express';
 import { Collegiate, ICollegiate } from '../models/collegiate';
-import { loadUser, authorize, AuthenticatedRequest } from '../middleware/auth';
-import { UserRole } from '../models/user';
+import { loadUser, AuthenticatedRequest } from '../middleware/auth';
 
 const router = Router();
 
@@ -32,7 +31,7 @@ router.get('/:id', async (req, res) => {
 });
 
 // Create a new collegiate
-router.post('/', authorize([UserRole.LANDLORD]), async (req: AuthenticatedRequest, res) => {
+router.post('/', async (req: AuthenticatedRequest, res) => {
     try {
         const newCollegiate: ICollegiate = new Collegiate(req.body);
         await newCollegiate.save();
@@ -43,7 +42,7 @@ router.post('/', authorize([UserRole.LANDLORD]), async (req: AuthenticatedReques
 });
 
 // Update a collegiate by ID
-router.put('/:id', authorize([UserRole.LANDLORD]), async (req, res) => {
+router.put('/:id', async (req, res) => {
     try {
         const updatedCollegiate = await Collegiate.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
         if (!updatedCollegiate) {
@@ -56,7 +55,7 @@ router.put('/:id', authorize([UserRole.LANDLORD]), async (req, res) => {
 });
 
 // Delete a collegiate by ID
-router.delete('/:id', authorize([UserRole.LANDLORD]), async (req, res) => {
+router.delete('/:id', async (req, res) => {
     try {
         const deletedCollegiate = await Collegiate.findByIdAndDelete(req.params.id);
         if (!deletedCollegiate) {

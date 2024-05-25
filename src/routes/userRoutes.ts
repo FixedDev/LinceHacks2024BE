@@ -6,7 +6,7 @@ const router = Router();
 // Get all users
 router.get('/', async (req, res) => {
     try {
-        const users = await User.find();
+        const users = await User.find().populate('collegiate');
         res.json(users);
     } catch (error) {
         res.status(500).json({error: error});
@@ -16,7 +16,7 @@ router.get('/', async (req, res) => {
 // Get a single user by ID
 router.get('/:id', async (req, res) => {
     try {
-        const user = await User.findById(req.params.id);
+        const user = await User.findById(req.params.id).populate('collegiate');
         if (!user) {
             return res.status(404).json({message: 'User not found'});
         }
@@ -40,7 +40,7 @@ router.post('/', async (req, res) => {
 // Update a user by ID
 router.put('/:id', async (req, res) => {
     try {
-        const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, {new: true, runValidators: true});
+        const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, {new: true, runValidators: true}).populate('collegiate');
         if (!updatedUser) {
             return res.status(404).json({message: 'User not found'});
         }
@@ -53,7 +53,7 @@ router.put('/:id', async (req, res) => {
 // Delete a user by ID
 router.delete('/:id', async (req, res) => {
     try {
-        const deletedUser = await User.findByIdAndDelete(req.params.id);
+        const deletedUser = await User.findByIdAndDelete(req.params.id).populate('collegiate');
         if (!deletedUser) {
             return res.status(404).json({message: 'User not found'});
         }
