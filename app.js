@@ -1,13 +1,12 @@
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+let express = require('express');
+let path = require('path');
+let cookieParser = require('cookie-parser');
+let logger = require('morgan');
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+let generalRouter = require('./routes/RoutingModule');
+const {databaseService} = require("./src/services/DatabaseService");
 
-var generalRouter = require('./routes/RoutingModule');
-
+databaseService.init();
 
 const app = express();
 

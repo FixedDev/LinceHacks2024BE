@@ -2,7 +2,7 @@ import {Db, MongoClient} from "mongodb";
 
 export class DatabaseService {
     private conn: MongoClient;
-    private database?: Db;
+    private _database?: Db;
 
     constructor() {
         this.conn = new MongoClient(process.env["MONGODB_URI"] ?? "")
@@ -10,7 +10,12 @@ export class DatabaseService {
 
     async init() {
         await this.conn.connect();
-        this.database = this.conn.db(process.env["MONGODB_DATABASE"] ?? "")
+        this._database = this.conn.db(process.env["MONGODB_DATABASE"] ?? "")
     }
 
+    get database() {
+        return this._database;
+    }
 }
+
+export const databaseService: DatabaseService = new DatabaseService();
