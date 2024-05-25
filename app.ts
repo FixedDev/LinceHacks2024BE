@@ -11,6 +11,7 @@ import express from 'express';
 import mongoose from 'mongoose';
 import userRoutes from './src/routes/userRoutes';
 import houseRoutes from "./src/routes/houseRoutes";
+import collegiateRoutes from "./src/routes/collegiateRoutes";
 
 const app = express();
 const port = 3000;
@@ -25,6 +26,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Routes
 app.use('/api/users', userRoutes);
 app.use('/api/houses', houseRoutes)
+app.use('/api/collegiates', collegiateRoutes)
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGODB_URI ?? "mongodb://localhost:27017", {}).then(() => {

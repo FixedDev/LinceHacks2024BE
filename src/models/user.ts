@@ -1,26 +1,47 @@
 import { Schema, model, Document } from 'mongoose';
-import { ObjectId } from 'mongodb';
+import { Collegiate, ICollegiate } from './collegiate';
 
 export enum UserRole {
-    LANDLORD = 'Arrendador',
-    STUDENT = 'Estudiante'
+    LANDLORD = 'landlord',
+    STUDENT = 'student'
+}
+
+export enum Gender {
+    MALE = 'male',
+    FEMALE = 'female',
+    OTHER = 'other'
 }
 
 export interface IUser extends Document {
-    _id: ObjectId;
-    authUserId: string;
+    _id: string;
+    fullName: string;
     email: string;
-    name: string;
-    lastName: string;
+    whatsapp: string;
     role: UserRole;
+    collegiate: ICollegiate['_id'];  // Reference to Collegiate model
+    gender: Gender;
+    bornDate: string;
+    studentId: string; // base64
+    residenceId: string; // base64
+    familyName: string;
+    familyNumber: string;
+    hasCompleteProfile: boolean;
 }
 
 const UserSchema = new Schema({
-    authUserId: { type: String, required: true },
-    email: { type: String, required: true },
-    name: { type: String, required: true },
-    lastName: { type: String, required: true },
-    role: { type: String, enum: Object.values(UserRole), required: true }
+    _id: { type: String, required: true },
+    fullName: { type: String, required: true },
+    email: { type: String, required: true, unique: true },
+    whatsapp: { type: String, required: true },
+    role: { type: String, enum: Object.values(UserRole), required: true },
+    collegiate: { type: Schema.Types.ObjectId, ref: 'Collegiate', required: true },  // Reference to Collegiate model
+    gender: { type: String, enum: Object.values(Gender), required: true },
+    bornDate: { type: String, required: true },
+    studentId: { type: String, required: true },  // base64
+    residenceId: { type: String, required: true },  // base64
+    familyName: { type: String, required: true },
+    familyNumber: { type: String, required: true },
+    hasCompleteProfile: { type: Boolean, required: true }
 });
 
 export const User = model<IUser>('User', UserSchema);

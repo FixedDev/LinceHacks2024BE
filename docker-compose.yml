@@ -1,13 +1,14 @@
 version: '3.8'
 
 services:
-    api:
-        build: .
-        ports:
-            - 3000:3000
-
-        volumes:
-            - .:/app
-            - /app/node_modules
-        environment:
-            NODE_ENV: development
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 3000:3000
+    expose:
+      - 3000
+    volumes:
+      - ./:/usr/app
+    command: npm run start
