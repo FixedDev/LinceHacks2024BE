@@ -1,11 +1,19 @@
 {
   "compilerOptions": {
-    "target": "es2020",
-    "module": "es2020",
+    "target": "es2019",
+    "module": "es2015",
     "esModuleInterop": true,
     "moduleResolution": "Node10",
     "forceConsistentCasingInFileNames": true,
     "strict": true,
-    "skipLibCheck": true
-  }
+    "skipLibCheck": true,
+    "outDir": "./dist"
+  },
+  "include": [
+    "./src",
+    "app.ts"
+  ],
+  "exclude": [
+    "./*/**.spec.js"
+  ]
 }
