@@ -26,6 +26,20 @@ router.get('/:id', async (req, res) => {
     }
 });
 
+
+// Get a single user by ID
+router.get('by-email/:email', async (req, res) => {
+    try {
+        const user = await BaseUser.find({where: {"email": req.params.email}}).populate('collegiate');
+        if (!user) {
+            return res.status(404).json({message: 'User not found'});
+        }
+        res.json(user);
+    } catch (error) {
+        res.status(500).json({error: error});
+    }
+});
+
 // Create a new user
 router.post('/', async (req, res) => {
     try {
@@ -40,7 +54,10 @@ router.post('/', async (req, res) => {
 // Update a user by ID
 router.put('/:id', async (req, res) => {
     try {
-        const updatedUser = await BaseUser.findByIdAndUpdate(req.params.id, req.body, {new: true, runValidators: true}).populate('collegiate');
+        const updatedUser = await BaseUser.findByIdAndUpdate(req.params.id, req.body, {
+            new: true,
+            runValidators: true
+        }).populate('collegiate');
         if (!updatedUser) {
             return res.status(404).json({message: 'User not found'});
         }
