@@ -31,9 +31,9 @@ router.get('/:id', async (req, res) => {
     }
 });
 
-router.get('/by-owner/:id', async (req, res) => {
+router.get('/by-owner/', async (req, res) => {
     try {
-        const house = await House.find({owner: req.params.id}).populate('owner');
+        const house = await House.find({owner: req.header("userId")}).populate('owner');
         if (!house) {
             return res.status(404).json({ message: 'House not found' });
         }
