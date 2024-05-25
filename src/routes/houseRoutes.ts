@@ -31,6 +31,18 @@ router.get('/:id', async (req, res) => {
     }
 });
 
+router.get('/by-owner/:id', async (req, res) => {
+    try {
+        const house = await House.find({owner: req.params.id}).populate('owner');
+        if (!house) {
+            return res.status(404).json({ message: 'House not found' });
+        }
+        res.json(house);
+    } catch (error) {
+        res.status(500).json({ error: error });
+    }
+});
+
 // Create a new house (only for landlords)
 router.post('/', authorize([UserRole.LANDLORD]), async (req: AuthenticatedRequest, res) => {
     try {
