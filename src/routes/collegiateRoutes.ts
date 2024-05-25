@@ -4,9 +4,6 @@ import { loadUser, AuthenticatedRequest } from '../middleware/auth';
 
 const router = Router();
 
-// Middleware para cargar el usuario en la solicitud
-router.use(loadUser);
-
 // Get all collegiates
 router.get('/', async (req, res) => {
     try {
