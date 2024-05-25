@@ -17,7 +17,7 @@ export interface IHouse extends Document {
 
 const HouseSchema = new Schema({
     location: {type: LocationSchema, required: true},
-    owner: {type: Schema.Types.ObjectId, ref: 'User', required: true},  // Reference to User model
+    owner: {type: String, ref: 'User', required: true},  // Reference to User model
     name: {type: String, required: true},
     photos: {type: [String], required: true},
     utilityCost: {type: Number, required: true},  // New property in English
