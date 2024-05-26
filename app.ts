@@ -35,7 +35,7 @@ app.all('/api/ping', (req, res) => {
 // Connect to MongoDB
 mongoose.connect(process.env.MONGODB_URI ?? "mongodb://localhost:27017", {}).then(() => {
     console.log('Connected to MongoDB');
-    app.listen(port, () => {
+    app.listen(port, "0.0.0.0", () => {
         console.log(`Server is running at http://localhost:${port}`);
     });
 }).catch((error) => {
